@@ -1,36 +1,20 @@
 import express from 'express';
-import pg from 'pg'
-import dotenv from 'dotenv'
-
-dotenv.config();
+import client from './pg_server.js'
 
 const app = express();
-
-const {Client} = pg;
 
 app.listen(3001, () => {
     console.log('Server running in port 3001');
 });
 
-const client = new Client({
-    user: process.env.PG_USER,
-    password: process.env.PG_PW,
-    host: process.env.PG_HOST,
-    port: process.env.PG_PORT,
-    database: process.env.PG_DB
-});
+app.post('/genres', async(req, res) =>{
+    const { name } = req.body;
 
-connect();
-
-async function connect() {
-
-    try{
-        await client.connect();
-        console.log('Database connected...')
-
-    } catch (error) {
+    try {
+        const result = await client.query('INSERT INTO genres (name) VALUES ()')
+    } catch(error){
         console.log(error.message)
     }
-    
 
-}
+});
+
