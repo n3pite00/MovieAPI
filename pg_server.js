@@ -8,7 +8,7 @@ app.listen(3001, () => {
     console.log('Server running in port 3001');
 });
 
-// tällä hetkellä pitää http://127.0.0.1:3001/movies?keyword=1 ---> muuta movies/1
+// Pitää hakea http://127.0.0.1:3001/movies?keyword=1 tai http://127.0.0.1:3001/movies?keyword=i
 
 app.get('/movies', async(req,res) => {
 
@@ -59,22 +59,7 @@ app.post('/movie', async(req, res) =>{
 });
 
 app.delete('/delete', async(req, res) =>{
-    let keyword = req.query.keyword;
-
-    try {
-        const id = parseInt(keyword, 10)
-
-        if (!keyword){
-            console.log("Lisää id endpoint!");
-        } else {
-            const keyword_id = parseInt(keyword, 10)
-            result = await pgPool.query('DELETE FROM movie WHERE id = $1', [keyword_id]);
-        }
-        
-        res.status(200).json({succesful: "Movie was deleted."})
-    } catch (error) {
-        res.status(400).json({error: error.message})
-    }
+    
 });
 
 app.get('/users', async(req,res) => {
