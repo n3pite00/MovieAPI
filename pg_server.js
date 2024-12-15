@@ -40,18 +40,18 @@ app.get('/movies', async(req,res) => {
 
 });
 
-// id bugi tietokannassa --> pyytää NOT NULL
 
 app.post('/movie', async(req, res) =>{
 
     const name = req.body.mvname;
     const year = req.body.mvyear;
     const genre = req.body.mvgenre;
+    
 
     try {
         await pgPool.query(
-            'INSERT INTO movie VALUES ($1,$2,$3)', [name, year, genre]);
-        res.end();
+            'INSERT INTO movie (name, year, genre) VALUES ($1,$2,$3)', [name, year, genre]);
+            res.status(200).json({successful: "Movie was added"})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -85,11 +85,13 @@ app.post('/user', async(req, res) =>{
     const username = req.body.username;
     const fullname = req.body.fullname;
     const password = req.body.password;
-    const birthyear = req.body.borthyear;
+    const birthyear = req.body.birthyear;
+
+
 
     try {
         await pgPool.query(
-            'INSERT INTO movie VALUES ($1,$2,$3,$4)', [username, fullname, password, birthyear]);
+            'INSERT INTO movie_user (username, fullname, password, birthyear) VALUES ($1,$2,$3,$4)', [username, fullname, password, birthyear]);
         res.end();
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -109,12 +111,63 @@ app.get('/genres', async(req,res) => {
 
 app.post('/genre', async(req, res) =>{
 
-    const id = req.body.genreid;
     const name = req.body.genrename;
 
     try {
         await pgPool.query(
-            'INSERT INTO movie VALUES ($1,$2)', [id, name]);
+            'INSERT INTO movie_genre (name) VALUES ($1)', [name]);
+        res.end();
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+});
+
+app.get('/reviews', async(req,res) => {
+    try {
+        const result = await pgPool.query('SELECT * FROM review');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+});
+
+app.post('/review', async(req, res) =>{
+
+    const username = req.body.username;
+    const stars = req.body.stars;
+    const review = req.body.reviewtext;
+    const movid = req.body.movie_id;
+
+    try {
+        await pgPool.query(
+            'INSERT INTO review (username, stars, review, movie_id) VALUES ($1,$2,$3,$4)', [username, stars, reviewtext, movie_id]);
+        res.end();
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+});
+
+app.get('/favorites', async(req,res) => {
+    try {
+        const result = await pgPool.query('SELECT * FROM favorites');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+});
+
+app.post('/favorite', async(req, res) =>{
+
+    const username = req.body.username;
+    const movid = req.body.movie_id;
+
+    try {
+        await pgPool.query(
+            'INSERT INTO favorites (username, movie_id) VALUES ($1,$2,)', [username, movie_id]);
         res.end();
     } catch (error) {
         res.status(400).json({error: error.message})

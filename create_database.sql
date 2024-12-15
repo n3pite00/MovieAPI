@@ -7,7 +7,7 @@ CREATE TABLE movie (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     year INT,
-    genre INT,
+    genre VARCHAR(255),
     FOREIGN KEY (genre) REFERENCES movie_genre (id)
 );
 
