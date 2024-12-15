@@ -58,8 +58,16 @@ app.post('/movie', async(req, res) =>{
 
 });
 
-app.delete('/delete', async(req, res) =>{
-    
+app.delete('/MovieDelete/:id', async(req, res) =>{
+    const movie_id = req.params.id
+    try {
+        const id = parseInt(movie_id, 10);
+        const query = "DELETE FROM movie WHERE id = $1";
+        await pgPool.query(query, [id]);
+        res.status(200).json({successful: "Movie was deleted."})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
 });
 
 app.get('/users', async(req,res) => {
