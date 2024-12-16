@@ -9,8 +9,6 @@ app.listen(3001, () => {
     console.log('Server running in port 3001');
 });
 
-// Pitää hakea http://127.0.0.1:3001/movies?keyword=1 tai http://127.0.0.1:3001/movies?keyword=i
-
 app.get('/movies', async(req,res) => {
 
     let keyword = req.query.keyword;
@@ -166,7 +164,7 @@ app.post('/review', async(req, res) =>{
 
 });
 
-app.get('/favorites', async(req,res) => {
+app.get('/favourites', async(req,res) => {
     try {
         const result = await pgPool.query('SELECT * FROM favorites');
         res.json(result.rows);
@@ -176,7 +174,7 @@ app.get('/favorites', async(req,res) => {
 
 });
 
-app.post('/favorite', async(req, res) =>{
+app.post('/favourite', async(req, res) =>{
 
     const username = req.body.username;
     const movie_id = req.body.movie_id;
