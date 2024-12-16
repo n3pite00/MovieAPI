@@ -45,7 +45,7 @@ CREATE TABLE favorites(
 INSERT INTO movie_genre (name) VALUES 
 ('drama'),('comedy'),('scifi'),('fantasy'),('action'),('triller');
 
-INSERT INTO movie (name, year, genre) VALUES 
+INSERT INTO movie (name, year, genreId) VALUES 
 ('Inception', 2010, '5'),
 ('The Terminator', 1984, '5'),
 ('Tropic Thunder', 2008, '2'),
@@ -58,12 +58,12 @@ INSERT INTO movie_user VALUES
 ('lizzy', 'Lisa Simpson', 'abcdef', 1991 ),
 ('boss', 'Ben Bossy', 'salasana', 1981 )
 
-INSERT INTO review (username, stars, review_text, movie_id) VALUES
+INSERT INTO review (username, stars, "desc", movieID) VALUES
 ('reimarii', 4, 'Could have been better', 2),
 ('lizzy', 5, 'Amazing', 3),
 ('boss', 1, 'lacking', 5)
 
-INSERT INTO favorites (username, movie_id) VALUES
+INSERT INTO favorites (username, movieId) VALUES
 ('reimarii', 5),
 ('lizzy', 3),
 ('boss', 1)
