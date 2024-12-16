@@ -2,7 +2,7 @@ CREATE TABLE movie(
     id SERIAL NOT NULL,
     name varchar(255) NOT NULL,
     year integer,
-    genre integer,
+    genreId integer,
     PRIMARY KEY(id),
     CONSTRAINT movie_genre_fkey FOREIGN key(genre) REFERENCES movie_genre(id)
 );
@@ -17,8 +17,8 @@ CREATE TABLE review(
     id SERIAL NOT NULL,
     username varchar(50) NOT NULL,
     stars integer,
-    review_text text,
-    movie_id integer NOT NULL,
+    "desc" text,
+    movieID integer NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT review_username_fkey FOREIGN key(username) REFERENCES movie_user(username),
     CONSTRAINT review_movie_id_fkey FOREIGN key(movie_id) REFERENCES movie(id),
@@ -27,16 +27,16 @@ CREATE TABLE review(
 
 CREATE TABLE movie_user(
     username varchar(50) NOT NULL,
-    fullname varchar(100) NOT NULL,
-    password varchar(100) NOT NULL,
-    birthyear integer,
+    name varchar(100) NOT NULL,
+    password varchar(100),
+    birthYear integer,
     PRIMARY KEY(username)
 );
 
 CREATE TABLE favorites(
     id SERIAL NOT NULL,
     username varchar(50) NOT NULL,
-    movie_id integer NOT NULL,
+    movieId integer NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT favorites_username_fkey FOREIGN key(username) REFERENCES movie_user(username),
     CONSTRAINT favorites_movie_id_fkey FOREIGN key(movie_id) REFERENCES movie(id)

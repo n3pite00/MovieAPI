@@ -4,6 +4,7 @@ import { pgPool } from './connection.js';
 const app = express();
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.json())
 
 app.listen(3001, () => {
     console.log('Server running in port 3001');
@@ -37,11 +38,11 @@ app.post('/movie', async(req, res) =>{
 
     const name = req.body.name;
     const year = req.body.year;
-    const genre = req.body.genre;
+    const genreId = req.body.genreId;
 
     try {
         await pgPool.query(
-            'INSERT INTO movie (name, year, genre) VALUES ($1,$2,$3)', [name, year, genre]);
+            'INSERT INTO movie (name, year, genreId) VALUES ($1,$2,$3)', [name, year, genreId]);
         res.status(200).json({successful: "Movie was added"})
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -93,15 +94,15 @@ app.get('/users', async(req,res) => {
 app.post('/register', async(req, res) =>{
 
     const username = req.body.username;
-    const fullname = req.body.fullname;
+    const name = req.body.name;
     const password = req.body.password;
-    const birthyear = req.body.birthyear;
+    const birthYear = req.body.birthYear;
 
 
 
     try {
         await pgPool.query(
-            'INSERT INTO movie_user (username, fullname, password, birthyear) VALUES ($1,$2,$3,$4)', [username, fullname, password, birthyear]);
+            'INSERT INTO movie_user (username, name, password, birthYear) VALUES ($1,$2,$3,$4)', [username, name, password, birthYear]);
             res.status(200).json({successful: "User has been registered."})
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -151,12 +152,12 @@ app.post('/review', async(req, res) =>{
 
     const username = req.body.username;
     const stars = req.body.stars;
-    const review_text = req.body.review_text;
-    const movie_id = req.body.movie_id;
+    const desc = req.body.desc;
+    const movieID = req.body.movieID;
 
     try {
         await pgPool.query(
-            'INSERT INTO review (username, stars, review_text, movie_id) VALUES ($1,$2,$3,$4)', [username, stars, review_text, movie_id]);
+            'INSERT INTO review (username, stars, "desc", movieID) VALUES ($1,$2,$3,$4)', [username, stars, desc, movieID]);
             res.status(200).json({successful: "Review was added."})
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -177,11 +178,11 @@ app.get('/favourites', async(req,res) => {
 app.post('/favourite', async(req, res) =>{
 
     const username = req.body.username;
-    const movie_id = req.body.movie_id;
+    const movieId = req.body.movieId;
 
     try {
         await pgPool.query(
-            'INSERT INTO favorites (username, movie_id) VALUES ($1,$2)', [username, movie_id]);
+            'INSERT INTO favorites (username, movieId) VALUES ($1,$2)', [username, movieId]);
             res.status(200).json({successful: "Favorite was added."})
     } catch (error) {
         res.status(400).json({error: error.message})
