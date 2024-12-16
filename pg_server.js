@@ -21,17 +21,9 @@ app.get('/movies', async(req,res) => {
         if (!keyword){
             result = await pgPool.query('SELECT * FROM movie');
         } else {
-            const keyword_id = parseInt(keyword, 10)
-            
-            
-            if (Number.isInteger(keyword_id)) {
-                result = await pgPool.query('SELECT * FROM movie WHERE id = $1', [keyword_id]);
-
-            } else {
-                keyword = keyword.toLowerCase();
-                keyword = '%'+keyword+'%';
-                result = await pgPool.query('SELECT * FROM movie WHERE LOWER(name) LIKE $1', [keyword]);
-            }
+            keyword = keyword.toLowerCase();
+            keyword = '%'+keyword+'%';
+            result = await pgPool.query('SELECT * FROM movie WHERE LOWER(name) LIKE $1', [keyword]);   
         }
         
         res.json(result.rows);
@@ -59,7 +51,26 @@ app.post('/movie', async(req, res) =>{
 
 });
 
-app.delete('/MovieDelete/:id', async(req, res) =>{
+app.get('/movie/:id', async(req, res) =>{
+    const movies_id = req.params.id
+    try {
+        let result
+    
+        const id = parseInt(movies_id, 10)
+
+        if (!Number.isInteger(id)) {
+            return res.status(400).json({error: error.message})
+        }
+        
+        result = await pgPool.query('SELECT * FROM movie WHERE id = $1', [id]);
+        res.json(result.rows[0]);
+
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+})
+
+app.delete('/mobie/:id', async(req, res) =>{
     const movie_id = req.params.id
     try {
         const id = parseInt(movie_id, 10);
@@ -81,7 +92,7 @@ app.get('/users', async(req,res) => {
 
 });
 
-app.post('/user', async(req, res) =>{
+app.post('/register', async(req, res) =>{
 
     const username = req.body.username;
     const fullname = req.body.fullname;
@@ -93,7 +104,7 @@ app.post('/user', async(req, res) =>{
     try {
         await pgPool.query(
             'INSERT INTO movie_user (username, fullname, password, birthyear) VALUES ($1,$2,$3,$4)', [username, fullname, password, birthyear]);
-        res.end();
+            res.status(200).json({successful: "User has been registered."})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -119,7 +130,7 @@ app.post('/genre', async(req, res) =>{
     try {
         await pgPool.query(
             'INSERT INTO movie_genre (name) VALUES ($1)', [name]);
-        res.end();
+            res.status(200).json({successful: "Genre was added."})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -148,7 +159,7 @@ app.post('/review', async(req, res) =>{
     try {
         await pgPool.query(
             'INSERT INTO review (username, stars, review_text, movie_id) VALUES ($1,$2,$3,$4)', [username, stars, review_text, movie_id]);
-        res.end();
+            res.status(200).json({successful: "Review was added."})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -173,7 +184,7 @@ app.post('/favorite', async(req, res) =>{
     try {
         await pgPool.query(
             'INSERT INTO favorites (username, movie_id) VALUES ($1,$2)', [username, movie_id]);
-        res.end();
+            res.status(200).json({successful: "Favorite was added."})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
